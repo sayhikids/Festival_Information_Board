@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="ko" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>리뷰 게시판 목록</title>
+  </head>
+  <body>
+    <script>
+      var alertMessage = /*[[${alertMessage}]]*/ ''; // Thymeleaf 변수 사용
+      console.log("알럿메시지 : ", '[[${alertMessage}]]');
+      
+      var result = confirm('[[${alertMessage}]]'); // JavaScript로 확인 대화 상자 표시
+
+      // 확인 버튼이 눌렸을 때 이전 페이지로 이동
+      if (result) {
+        history.back();
+      }
+    </script>
+  </body>
+</html>

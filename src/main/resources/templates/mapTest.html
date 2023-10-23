@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>다음 지도 API</title>
+</head>
+<body>
+	<div id="map" style="width:750px;height:350px;"></div>
+
+	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6cebb5f8cfbea0a19b11dca692d81ff5"></script>
+	<div id="map" style="width:750px;height:350px;"></div>
+
+<script>
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = {
+	        center: new kakao.maps.LatLng(36.37190, 129.10910), // 지도의 중심좌표
+	        level: 15, // 지도의 확대 레벨
+	        mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
+	    }; 
+	// 지도를 생성한다 
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	// 마우스 드래그와 모바일 터치를 이용한 지도 이동을 막는다
+	map.setDraggable(false);		
+	// 지도에 마커를 생성하고 표시한다
+	var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(37.540705, 126.956764, 0.551279, 0.483654), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('서울 클릭했습니다!');
+	});
+	// 지도에 마커를 생성하고 표시한다
+	var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(37.567167, 127.190292, 1.454663, 1.276685), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('경기도 클릭했습니다!');
+	});
+	// 지도에 마커를 생성하고 표시한다
+	var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(37.555837, 128.209315, 2.734753, 2.399858), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('강원도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(36.557229, 126.779757, 1.640025, 1.420338), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('충청남도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(36.628503, 127.929344, 1.638511, 1.420338), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('충청북도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(36.248647, 128.664734, 2.132939, 1.839925 ), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('경상북도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(35.259787, 128.664734, 2.255005, 1.921210), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('경상남도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(35.716705, 127.144185, 1.610107, 1.379571), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('전라북도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(37.540705, 126.956764, 0.551279, 0.483654), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('전라남도 클릭했습니다!');
+	});
+    var marker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(34.819400, 126.893113, 2.338820, 1.981914), // 마커의 좌표
+	    map: map // 마커를 표시할 지도 객체
+	});
+	// 마커에 클릭 이벤트를 등록한다 (우클릭 : rightclick)
+	kakao.maps.event.addListener(marker, 'click', function() {
+	    alert('제주 클릭했습니다!');
+	});
+</script>

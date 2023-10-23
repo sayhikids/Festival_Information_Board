@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="UTF-8" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullstival 웹사이트</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+
+
+    <style>
+        /* 푸터를 브라우저 맨 아래로 고정합니다. */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f8f9fa;
+            /* 푸터의 배경색 설정 */
+            text-align: center;
+            /* 푸터 내용 가운데 정렬 */
+            padding: 10px;
+            /* 원하는 여백 설정 */
+        }
+
+        /* 드롭다운 메뉴에서 화살표를 숨깁니다. */
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        /* 드롭다운 메뉴의 위치를 조절합니다. */
+        .dropdown-menu {
+            left: 0;
+            /* 드롭다운 메뉴가 화면 왼쪽에 정렬되도록 설정합니다. */
+            margin-left: -30px;
+            /* 원하는 만큼 왼쪽으로 이동시킵니다. */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav id="navbar-example2" class="navbar bg-body-tertiary px-3 mb-3">
+            <a class="navbar-brand" href="#"><b>Fullstival</b></a>
+            <form class="" novalidate id="tset-form" action="/test" method="get">
+                <ul class="nav nav-pills">
+                    <div id="welcome-message"></div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                            aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                fill="black" class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                            </svg></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#scrollspyHeading1">축제게시판</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#scrollspyHeading2">리뷰게시판</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#scrollspyHeading3">자유게시판</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#scrollspyHeading4">공지사항&QnA</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="login-link" href="#scrollspyHeading5"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
+                                class="bi bi-person" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                            </svg></a>
+                    </li>
+                </ul>
+            </form>
+        </nav>
+    </header>
+
+    <section class="container my-5">
+        <h1>Fullstival 웹사이트</h1>
+        <p>Fullstival 무엇을 하는 사이트에 대한 간단한 설명</p>
+    </section>
+
+    <!-- 중간에 검색 폼을 추가하고 화면의 80% 폭으로 설정합니다. -->
+    <div class="container" style="width: 70%; margin-top: 150px;">
+        <form class="d-flex">
+            <input class="form-control me-1" type="search" placeholder="축제검색" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+
+    <section class="container my-5">
+        <h2>축제</h2>
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- festivals 데이터를 순회하며 각 축제 정보를 표시합니다. -->
+                <div th:each="festival, iterStat : ${festivals}"
+                    th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">[[${festival.festivalTitle}]]</h5>
+                            <p class="card-text">[[${festival.period}]]</p>
+                            <img class="card-img-top" th:src="${festival.poster}" alt="축제 포스터">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </section>
+
+
+    <footer class="bg-dark text-light text-center py-3">
+        <p>&copy; 2023 Fullstival. 모든 권리 보유.</p>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 서버에서 데이터를 가져옵니다.
+            $.ajax({
+                url: '/test',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    const festivals = data; // 서버에서 받아온 데이터를 festivals 배열에 할당
+                    const carouselInner = document.querySelector(".carousel-inner");
+                    const randomFestivals = festivals.sort(() => Math.random() - 0.5).slice(0, 5);
+
+                    // 캐러셀 내용을 초기화합니다.
+                    carouselInner.innerHTML = "";
+
+                    randomFestivals.forEach((festival, index) => {
+                        // 각 축제 정보를 카드로 만들어 캐러셀에 추가합니다.
+                        const carouselItem = document.createElement("div");
+                        carouselItem.classList.add("carousel-item");
+                        if (index === 0) {
+                            carouselItem.classList.add("active");
+                        }
+
+                        const card = document.createElement("div");
+                        card.classList.add("card");
+
+                        const cardBody = document.createElement("div");
+                        cardBody.classList.add("card-body");
+
+                        const title = document.createElement("h5");
+                        title.classList.add("card-title");
+                        title.innerText = festival.festivalTitle;
+
+                        const period = document.createElement("p");
+                        period.classList.add("card-text");
+                        period.innerText = festival.period;
+
+                        const image = document.createElement("img");
+                        image.classList.add("card-img-top");
+                        image.src = festival.thumbnail;
+                        image.alt = "Festival Poster";
+
+                        cardBody.appendChild(title);
+                        cardBody.appendChild(period);
+                        card.appendChild(cardBody);
+                        card.appendChild(image);
+                        carouselItem.appendChild(card);
+                        carouselInner.appendChild(carouselItem);
+                    });
+
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 에러 발생:', error);
+                }
+            });
+        });
+    </script>
+
+
+
+
+</body>
+
+</html>

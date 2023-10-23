@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ko">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 게시판 목록</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+
+    <style>
+        /* 이미지 썸네일 스타일 */
+        .thumbnail {
+            max-width: 100px;
+            /* 이미지 썸네일의 최대 너비 */
+            max-height: 100px;
+            /* 이미지 썸네일의 최대 높이 */
+        }
+
+        /* 리뷰 목록 스타일 */
+        .review-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        /* 리뷰 아이템 스타일 */
+        .review-item {
+            flex-basis: calc(30.33% - 20px); /* 3개씩 가로로 정렬하므로 33.33%의 폭을 가짐 */
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            text-align: center; /* 글씨를 가운데 정렬 */
+        }
+
+        /* 검색 입력 상자 스타일 */
+        .search-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .search-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* 검색 입력 상자 크기 조절 */
+        #search-input {
+            width: 800px;
+            /* 원하는 폭으로 조절 (예: 300px) */
+            padding: 10px;
+            /* 내부 여백 추가 */
+            font-size: 16px;
+            /* 글꼴 크기 조절 */
+            margin-bottom: 40px;
+
+        }
+
+        /* 리뷰 작성하기 버튼 스타일 */
+        .write-review-button {
+            right: 10px;
+        }
+
+        /* 버튼 디자인 스타일 */
+        .write-review-button a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: black;
+            /* 버튼 배경색 */
+            color: #fff;
+            /* 버튼 텍스트 색상 */
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        /* .write-review-button a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: transparent; */
+            /* 배경색을 투명으로 설정 */
+            /* color: #000; */
+            /* 텍스트 색상을 검정색으로 설정 */
+            /* text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }  */
+
+        .write-review-button a:hover {
+            background-color: #333;
+            /* 마우스 오버 시 배경색 변경 */
+            color: #fff;
+            /* 텍스트 색상 변경 */
+        }
+
+
+        /* 이전/다음 페이지 링크 스타일 */
+        .page-link.prev,
+        .page-link.next {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 활성화된 페이지 링크 스타일 */
+        .page-link.active {
+            background-color: black;
+            color: #fff;
+            border-color: black;
+        }
+
+        /* 페이지 링크 스타일 */
+        .page-link:not(.prev):not(.next) {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 10px;
+            margin-right: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 페이지 링크 스타일 - 호버 시 */
+        .page-link:not(.prev):not(.next):hover {
+            background-color: #333;
+            color: #fff;
+            border-color: black;
+        }
+
+        /* 페이징 스타일 */
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            /* 가로 가운데 정렬 */
+            align-items: center;
+            /* 세로 가운데 정렬 */
+        }
+
+        /* 링크 기본 스타일 제거 */
+         a {
+             text-decoration: none;
+            /* 밑줄 제거 */
+            color: inherit;
+            /* 기본 텍스트 색상 상속 */
+        }
+
+
+        /* Pagination 스타일 */
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+</style>
+</head>
+
+<body>
+
+    <!-- 공통 헤더 -->
+    <div th:replace="/fragments/header :: header"></div>
+
+    <!-- 페이지 타이틀 -->
+    <section>
+        <h1 style="text-align: center;">리뷰 게시판 목록</h1>
+        
+        <!-- 검색 부분 -->
+        <div class="search-box">
+            <form id="search-form" method="get" action="/review/reviewList">
+                <input type="text" id="search-input" placeholder="상품을 검색하세요" name="searchQuery" th:value="${searchQuery}">
+                <button type="submit" class="search-button">검색</button>
+            </form>
+        </div>
+        
+        
+        <!-- 리뷰 목록 -->
+        <div class="container" style="max-width: 1700px;">
+            <!-- 리뷰 작성하기 버튼 -->
+            <div class="write-review-button" id="write-review-button">
+                <!-- href="/src/main/resources/templates/review/reviewWrite.html" -->
+                <!-- <a >리뷰 작성하기</a> -->
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#writeModal">
+                    <a th:href="@{/review/reviewWrite}">리뷰작성하기</a>
+                </button>
+            </div>
+            <div class="album py-5 bg-body-tertiary">
+                    <div class="carousel-inner">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                            <!-- festivals 데이터를 순회하며 각 축제 정보를 표시합니다. -->
+                    <div th:each="review, iterStat : ${result}">
+                        <!-- 각 축제 정보 표시 -->
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <a th:href="@{/review/reviewDetail(reviewNum=${review.reviewNum})}">
+                                    <h3 class="card-text" th:text="${review.title}" alt="리뷰 제목"></h3>
+                                    <p class="card-title" th:text="${review.nickname}" alt="닉네임"></p>
+                                    <!-- <p class="card-text" th:utext="${review.content}" alt="축제 기간">축제 기간</p> -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 페이지 번호 목록 표시 -->
+        <div class="pagination">
+            <!-- 이전 페이지 버튼 -->
+            <a th:if="${hasPrevPage}" th:href="@{'/review/reviewList?page=' + ${prevPageNumber}}"
+                class="page-link prev">이전</a>
+                <!-- 페이지 번호 표시 -->
+                <ul class="pagination justify-content-center" id="pagination">
+                    <li th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{'/review/reviewList?page=' + ${pageNumber}}" th:text="${pageNumber}"
+                        th:class="${pageNumber == currentPage ? 'active' : ''}"></a>
+                    </li>
+                </ul>
+                <!-- 다음 페이지 버튼 -->
+                <a th:if="${hasNextPage}" th:href="@{'/review/reviewList?page=' + ${nextPageNumber}}"
+                class="page-link next">다음</a>
+            </div>
+        </div>
+        </section>
+
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+       
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gg6vUz1rTL5UHVbNXLKwgpAYNr2NvTAPC5JiKc+2aX8Cxl+U7v2+nSvzvIMnJvWR"
+    crossorigin="anonymous"></script>
+            
+    <!-- 헤더 스크립트 -->
+    <script th:replace="fragments/header :: script"></script>
+
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰글 상세 내용</title>
+    <!-- 부트스트랩 링크 -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+
+    <style>
+    /* 본문 컨테이너 스타일 */
+    .review-detail-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 리뷰 제목 스타일 */
+    .review-detail-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    /* 작성자 정보 스타일 */
+    .review-detail-writer {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #777; /* 회색으로 표시 */
+    }
+
+    /* 리뷰 내용 스타일 */
+    .review-detail-content {
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 10px; /* 내용 주위에 패딩 추가 */
+        border: 1px solid #ddd; /* 테두리 추가 */
+        border-radius: 5px; /* 둥근 테두리 적용 */
+        background-color: #f5f5f5; /* 배경색 설정 */
+    }
+
+    /* 조회수, 해시태그, 좋아요 수 스타일 */
+    .review-detail-views,
+    .review-detail-hashtags,
+    .review-detail-likes {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #777;
+    }
+
+
+    /* 댓글 창 스타일 */
+    .reply-section {
+        background-color: #f7f7f7;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    .reply-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .reply-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .reply-item {
+        list-style-type: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: relative; /* 부모 요소로부터의 상대 위치 설정 */
+    }
+    /* 목록 항목 앞에 이미지 설정 */
+    .reply-item::before {
+        content: "";
+        background-image: url('/src/main/resources/templates/img/reply_icon.png'); /* 이미지 경로 설정 */
+        width: 20px; /* 이미지 너비 조절 */
+        height: 20px; /* 이미지 높이 조절 */
+        background-size: cover; /* 이미지 크기 조절 */
+        display: inline-block;
+        position: absolute;
+        left: -30px; /* 이미지의 왼쪽 여백 조절 */
+        top: 50%; /* 이미지를 수직 중앙에 배치 */
+        transform: translateY(-50%); /* 이미지를 수직 중앙에 배치 */
+        border-radius: 50%; /* 이미지를 원 모양으로 만들기 위해 필요할 경우 */
+    }
+
+    .reply-writer {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .reply-content {
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .reply-date {
+        font-size: 14px;
+        color: #888;
+    }
+
+    .reply-form {
+        margin-top: 20px;
+    }
+
+        /* 댓글 작성 폼 스타일 */
+        .reply-form .form-group {
+            margin-bottom: 10px;
+        }
+
+        .reply-form input[type="text"],
+        .reply-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .reply-form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .reply-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 공통 헤더 -->
+    <div th:replace="/fragments/header :: header"></div>
+
+    <!-- 중간 게시물 공간 -->
+    <section class="container my-5 text-center">
+        <!-- 리뷰 상세 페이지 HTML -->
+        <div class="review-detail-container" th:object="${reviewDTO}">
+            <form>
+                <input type="hidden" name="reviewNum" th:value="${reviewDTO.reviewNum}"/>
+                <input type="hidden" name="title"/>
+                <input type="hidden" name="content"/>
+                <input type="hidden" name="nickname"/>
+            </form>
+            
+            <h2 class="review-detail-title" id="reviewTitle" th:text="${reviewDTO.title}">리뷰 제목</h2>
+            
+            <!-- 작성자와 작성일을 나란히 배치하는 <div> 태그 -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p class="review-detail-writer">
+                    <span>작성자: </span> <span  id="nickname" th:text="${reviewDTO.nickname}"></span>
+                </p>
+                <p class="review-detail-date">
+                    <span>작성일: </span> <span id="regDate" h:text="${reviewDTO.regDate}"></span>
+                </p>
+                
+                <!-- <p class="review-detail-date">
+                </p> -->
+            </div>
+            
+            <p class="review-detail-content" id="reviewContent" th:text="${reviewDTO.content}">
+            </p>
+            
+            <span>조회수: </span><span class="review-detail-views" name="readCount" th:text="${reviewDTO.readCount}"></span><br>
+            <!-- <span>해시태그: </span><span class="review-detail-hashtags" name="hashTag1" th:text="${reviewDTO.hashTag1}"></span><br> -->
+            <button id="likeButton" class="btn btn-primary">좋아요</button>
+            <span id="goodCount" name="goodCount" th:text="${reviewDTO.goodCount}">0</span>
+        </div> 
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+            <button type="button" class="btn btn-custom modifyBtn">수정</button>
+            <button type="button" class="btn btn-danger removeBtn">삭제</button>
+        </div>
+    </section>
+
+    <section class="container my-5 text-center" th:object="${reviewDTO}">
+        <div class="review-detail-container">
+            
+            <!-- 댓글 작성창 (로그인 시에만 보임!!!) -->
+            <div class="reply-section" th:if="${session.loggedInUser != null}">
+                <!-- 댓글 작성 폼 -->
+                <form class="reply-form" action="/review/save" method="post">
+
+                    <input type="hidden" name="reviewNum" th:value="${reviewDTO.reviewNum}"/>
+                    <div th:object="${replyDTO}">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="reply-writer" name="nickname" th:value="${session.loggedInUser.nickname}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" id="reply-content" name="content"  placeholder="댓글 내용" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        댓글 작성
+                    </button>
+                </form>
+
+                <!-- 댓글 수정,삭제 버튼 -->
+                <!-- &&&&&&&&&&&&&&&&&&&&&&&&&&&&&& 내가 작성한 댓글에만 버튼이 보이도록...&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& -->
+                <div style="display: flex; justify-content: flex-end; margin-right: -1px; margin-top: 15px;">
+                    <button type="button" class="btn btn-custom replyModifyBtn">댓글 수정</button>
+                    <button type="button" class="btn btn-danger replyRemoveBtn">댓글 삭제</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 댓글 상세보기 -->
+        <div class="review-detail-container">
+            <h3>댓글 목록</h3>
+            <div class="reply-section" th:each="reply : ${replyList}">
+                <!-- 댓글 목록 표시 -->
+                <ul class="reply-list">
+                    <!-- 예제 댓글 아이템 -->
+                    <li class="reply-item">
+                        <p class="reply-writer">
+                            댓글 작성자: <span th:text="${reply.nickname}">닉네임</span>
+                        </p>
+                        <p class="reply-content" th:text="${reply.content}">이 리뷰가 정말 유용하네요. 감사합니다!</p>
+                        <p class="reply-date" th:text="${reply.regDate}">
+                            작성일: <span th:text="${reply.nickname}">YYYY-MM-DD</span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 댓글 창 끝 -->
+    </section>
+
+    <!-- 페이징 -->
+    <div class="my-3 text-center">
+        <ul class="list-inline d-flex justify-content-center">
+            <li class="list-inline-item mx-3"><a href="#" class="btn btn-light" id="prevNotice">이전글</a></li>
+            <li class="list-inline-item mx-3"><a href="/review/reviewList" class="btn btn-light">목록</a></li>
+            <li class="list-inline-item mx-3"><a href="#" class="btn btn-light" id="nextNotice">다음글</a></li>
+        </ul>
+    </div>
+    
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+
+    <!--부트스트랩 스크립트-->
+    <!-- jQuery 라이브러리를 먼저 로드합니다. -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 그 다음 Bootstrap 스크립트를 로드합니다. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+    </script>
+
+    <!-- 헤더 스크립트 -->
+    <script th:replace="fragments/header :: script"></script>
+
+    <!-- 리뷰글 수정삭제 스크립트! -->
+    <script th:inline="javascript">
+    
+    $(".removeBtn").click(() => {
+        if (!confirm("삭제하시겠습니까?")) {
+            return;
+        }
+
+        var actionForm = $("form");
+        // var num = $("input[name='reviewNum']").val();
+        // $("input[name='nickname']").val($("#nickname").text());
+        // var nickname = $("input[name='nickname']").val();
+
+        actionForm.attr("action", "/review/remove").attr("method", "post");
+        // actionForm.find("input[name='reviewNum']").val(num);
+        // actionForm.find("input[name='nickname']").val(nickname);
+        actionForm.submit();
+    });
+
+    $(".modifyBtn").click(function () {
+        $("input[name='title']").val($("#reviewTitle").text());
+        $("input[name='content']").val($("#reviewContent").text());
+
+        var actionForm = $("form");
+        // var num = $("input[name='reviewNum']").val();
+        // var title = $("input[name='title']").val();
+        // var content = $("input[name='content']").val();
+
+        actionForm.attr("action", "/review/reviewModify").attr("method", "get");
+        // actionForm.find("input[name='reviewNum']").val(num);
+        // actionForm.find("input[name='nickname']").val(nickname);
+        // actionForm.find("input[name='title']").val(title);
+        // actionForm.find("input[name='content']").val(content);
+
+        actionForm.submit();
+    });
+    </script>
+
+    <!-- 페이징 스크립트! -->
+    <script>
+    // 이전으로 돌아가는 키
+    document.getElementById('prevNotice').addEventListener('click', function () {
+    // 현재 페이지의 URL을 가져옵니다.
+    var currentUrl = window.location.href;
+
+    // 현재 페이지의 URL에서 festivalNum 값을 추출합니다.
+    var currentFestivalNum = getFestivalNumFromUrl(currentUrl);
+
+    // 현재 festivalNum 값에서 1을 빼서 이전 페이지의 festivalNum 값을 생성합니다.
+    var prevFestivalNum = currentFestivalNum - 1;
+
+    // 0보다 작거나 같은 경우 "첫번째 게시물 입니다" 메시지를 표시하고 이동하지 않습니다.
+    if (prevFestivalNum <= 0) {
+            alert("첫번째 게시물 입니다");
+            return; // 페이지 이동을 하지 않도록 종료합니다.
+        }
+
+        // 이전 페이지의 URL을 생성합니다.
+        var prevPageUrl = '/review/reviewDetail?reviewNum=' + prevFestivalNum;
+
+        // 이전 페이지로 이동합니다.
+        window.location.href = prevPageUrl;
+    });
+
+
+
+    // 다음으로 넘어가는 키
+    document.getElementById('nextNotice').addEventListener('click', function () {
+        // 현재 페이지의 URL을 가져옵니다.
+        var currentUrl = window.location.href;
+
+        // 현재 페이지의 URL에서 festivalNum 값을 추출합니다.
+        var currentFestivalNum = getFestivalNumFromUrl(currentUrl);
+
+        // 여기에 마지막 게시물의 번호를 지정하세요.
+        var lastFestivalNum = 37; // 마지막 게시물
+
+        // 현재 festivalNum 값이 마지막 게시물 번호와 같거나 큰 경우 "마지막 게시물 입니다" 메시지를 표시하고 이동하지 않습니다.
+        if (currentFestivalNum >= lastFestivalNum) {
+                alert("마지막 게시물 입니다");
+                return; // 페이지 이동을 하지 않도록 종료합니다.
+            }
+
+        // 현재 festivalNum 값에 1을 더하여 다음 페이지의 festivalNum 값을 생성합니다.
+        var nextFestivalNum = currentFestivalNum + 1;
+
+        // 다음 페이지의 URL을 생성합니다.
+        var nextPageUrl = '/review/reviewDetail?reviewNum=' + nextFestivalNum;
+
+        // 다음 페이지로 이동합니다.
+        window.location.href = nextPageUrl;
+    });
+
+    //목록으로 돌아가기
+    document.getElementById('go_Back').addEventListener('click', function () {
+            //목록으로 가고싶은 주소
+            var backUrl = '/review/reviewList'
+
+            //클릭시 목록으로 돌아가게 된다
+            window.location.href = backUrl;
+    });
+
+    // URL에서 festivalNum 값을 추출하는 함수 현재창 넘버 알아내는거
+    function getFestivalNumFromUrl(url) {
+        var match = url.match(/reviewNum=(\d+)/);
+        if (match) {
+            return parseInt(match[1], 10);
+        }
+        return 0; // 기본값을 설정할 수 있습니다.
+    }
+    </script>
+    
+</body>
+</html>

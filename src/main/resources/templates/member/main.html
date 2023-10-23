@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullstival 웹사이트</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <style>
+        .custom-section {
+            /* 배경 이미지로 GIF 파일을 설정합니다. */
+            background-image: url('https://gifburg.com/images/gifs/fireworks/webp/0016.webp');
+            background-size: cover;
+            /* 화면 크기에 맞게 이미지 크기 조정 */
+            background-repeat: no-repeat;
+            /* 배경 이미지 반복 방지 */
+            background-position: center center ;
+            /* 이미지를 수평 및 수직 중앙에 정렬 */
+
+            /* 다른 스타일을 적용할 수 있습니다. */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px; /* 높이를 400px로 늘립니다. */
+        }
+
+        /* 텍스트 색상을 흰색으로 변경 */
+        .custom-section h1,
+        .custom-section h5 {
+            color: white;
+        }
+
+        /* 중요: 화면이 짤리지 않도록 스타일을 조정합니다. */
+        .carousel-item {
+            text-align: left;
+            /* 이미지 위 여백 추가 */
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            width: 100%;
+            /* 카드가 100% 폭을 차지하도록 설정 */
+        }
+
+        .card-img-top {
+            max-width: 100%;
+            /* 이미지가 카드 내에 맞게 크기 조절 */
+            height: 500px;
+            margin: auto;
+
+        }
+
+        /* 중간 검색 폼 관련 스타일 수정 */
+        .search-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .search-form input[type="search"] {
+            max-width: 80%;
+        }
+
+        /* 드롭다운 메뉴에서 화살표를 숨깁니다. */
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        /* 드롭다운 메뉴의 위치를 조절합니다. */
+        .dropdown-menu {
+            left: 0;
+            /* 드롭다운 메뉴가 화면 왼쪽에 정렬되도록 설정합니다. */
+            margin-left: -30px;
+            /* 원하는 만큼 왼쪽으로 이동시킵니다. */
+        }
+
+        /* 링크 기본 스타일 제거 */
+        a {
+            text-decoration: none;
+            /* 밑줄 제거 */
+            color: inherit;
+            /* 기본 텍스트 색상 상속 */
+        }
+
+        /* 화살표 아이콘만 시각적으로 숨기기 */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-image: none !important;
+        }
+
+        /* 구글 폰트변경 임포트 */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo+Play:wght@900&display=swap');
+
+        .container h1 {
+            font-family: ' Fullstival', serif;
+            font-weight: 900;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <!-- 구글 폰트변경 링크 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cairo+Play:wght@900&display=swap" rel="stylesheet">
+
+        <nav id="navbar-example2" class="navbar bg-body-tertiary px-3 mb-3">
+            <a class="navbar-brand" style="margin-left: 20px" href="/main"><b>Fullstival</b></a>
+            <ul class="nav nav-pills">
+                <div id="welcome-message" th:if="${session.loggedInUser != null}"
+                    th:text="${session.loggedInUser.nickname} + '님 환영합니다'" style="display: flex; align-items: center;">
+                </div>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                            fill="black" class="bi bi-list" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                        </svg></a>
+                    <!-- 게시판 햄버거  -->
+                    <ul class="dropdown-menu">
+                        <a class="dropdown-item" href="/festival/festivalList">
+                            <li>축제게시판</li>
+                        </a>
+                        <li>
+                            <!-- "#scrollspyHeading1" -->
+                            <hr class="dropdown-divider">
+                        </li>
+                        <!-- "#scrollspyHeading2" -->
+                        <a class="dropdown-item" href="/review/reviewList">
+                            <li>리뷰게시판</li>
+                        </a>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <!-- "#scrollspyHeading4 -->
+                        <a class="dropdown-item" href="/notice/notice1">
+                            <li>공지사항</li>
+                        </a>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <!-- "#scrollspyHeading4 -->
+                        <a class="dropdown-item" href="/notice/question">
+                            <li>QnA</li>
+                        </a>
+                    </ul>
+                </li>
+                <!-- 로그인하지 않은 사용자에게 보여질 메뉴   href="#scrollspyHeading5" -->
+                <li class="nav-item" th:unless="${session.loggedInUser != null}">
+                    <a class="nav-link" id="login-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-person"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                    </a>
+                </li>
+
+                <!-- 로그인한 사용자에게 보여질 메뉴 -->
+                <!-- 마이페이지, 로그아웃  -->
+                <li class="nav-item dropdown" th:if="${session.loggedInUser != null}">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-person"
+                            viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <a class="dropdown-item" id="myPage">
+                            <li>마이페이지</li>
+                        </a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item" id="logout">
+                            <li>로그아웃</li>
+                        </a>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <section class="container my-5 custom-section"
+        style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 20vh;">
+        <div>
+            <h5>Hello &amp; welcome</h5>
+        </div>
+        <p class="lead">
+        <div>
+            <a href="/festival/festivalList">
+                <h1 class="display-2">
+                    <strong>Fullstival</strong>
+                </h1>
+            </a>
+        </div>
+        </p>
+    </section>
+
+
+    <!-- 중간에 검색 폼을 추가하고 화면의 80% 폭으로 설정합니다. -->
+    <div class="container" style="width: 50%; margin-top: 50px;">
+        <form class="d-flex" method="get" action="/festival/festivalList">
+            <input class="form-control me-1" type="search" placeholder="축제검색" aria-label="Search" name="searchQuery"
+                th:value="${searchQuery}">
+            <button class="btn btn-outline-secondary" type="submit" style="width: 100px;">검색</button>
+
+        </form>
+    </div>
+
+    <section class="container my-5">
+        <div id="myCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel"
+            style="margin-top: 70px; margin-bottom: 70px;">
+            <div class="carousel-inner">
+                <!-- festivals 데이터를 순회하며 각 축제 정보를 표시합니다. -->
+                <div th:each="festival, iterStat : ${festivals}"
+                    th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                    <!--게시물 클릭시 잘넘어가는데 에러가 뜨는거 나중에 해결-->
+                    <a th:href="@{/festival/festivalDetail(festivalNum=${festival.festivalNum})}">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${festival.festivalTitle}" alt="축제 제목"></h5>
+                                <p class="card-text" th:text="${festival.period}" alt="축제 기간"></p>
+                                <img class="card-img-top" th:src="${festival.poster}" alt="축제 썸네일">
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">이전</span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">다음</span>
+            </a>
+        </div>
+    </section>
+
+
+
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+
+    <!-- 상담채팅 -->
+    <div id="tawk_12345" style="height: 50px; width: 50px; position: fixed; bottom: 20px; ">
+        <a href="javascript:void(0);" onclick="Tawk_API.toggle();"></a>
+    </div>
+
+
+
+
+    <!-- jQuery 라이브러리를 먼저 로드합니다. -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 그 다음 Bootstrap 스크립트를 로드합니다. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
+
+
+    <!--로그인 로직 같은경우 페이지가 다 로딩된 다음에 실행되어야 해서
+    페이지 로딩이 다 끝난후 스크립트문 실행 해야함-->
+
+    <script>
+        //로그인 체크 후 비로그인 시 login 으로 이동
+        //로그인 시 myPage 로 이동
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if (document.getElementById('login-link')) {
+                document.getElementById('login-link').addEventListener('click', function (event) {
+                    // 사용자가 로그인하지 않은 경우
+                    alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.');
+                    event.preventDefault(); // 기본 동작 방지
+                    window.location.href = "/member/login"; // 로그인 페이지로 이동
+                });
+            }
+            if (document.getElementById('myPage')) {
+                document.getElementById('myPage').addEventListener('click', function (event) {
+                    // 사용자가 로그인한 경우
+                    event.preventDefault(); // 기본 동작 방지
+                    window.location.href = "/member/myPage"; // 마이페이지로 이동
+                });
+            }
+            if (document.getElementById('logout')) {
+                document.getElementById('logout').addEventListener('click', function (event) {
+                    // 사용자가 로그인한 경우
+                    console.log('logout 클릭 이벤트 확인용');
+                    alert('로그아웃 하겠습니다.');
+                    event.preventDefault(); // 기본 동작 방지
+                    window.location.href = "/logout"; // 로그아웃으로 이동
+                });
+            }
+            if (document.getElementById('modifyPassword')) {
+                document.getElementById('modifyPassword').addEventListener('click', function (event) {
+
+                    alert('비밀번호 변경 페이지로 이동합니다.');
+                    event.preventDefault(); // 기본 동작 방지
+                    window.location.href = "/logout"; // 비밀번호 변경 페이지로 이동
+                });
+            }
+
+
+
+
+        });
+    </script>
+
+
+    <script>
+        // 문서 로딩 후 실행
+        document.addEventListener('DOMContentLoaded', function () {
+            $.ajax({
+                url: '/member/main',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log('데이터 가져옴:', data);
+
+                    // 캐러셀 내용을 초기화합니다.
+                    const carouselInner = document.querySelector(".carousel-inner");
+                    const randomFestivals = data.sort(() => Math.random() - 0.5).slice(0, 5);
+                    carouselInner.innerHTML = "";
+
+                    randomFestivals.forEach((festival, index) => {
+                        // 각 축제 정보를 카드로 만들어 캐러셀에 추가합니다.
+                        const carouselItem = document.createElement("div");
+                        carouselItem.classList.add("carousel-item");
+                        if (index === 0) {
+                            carouselItem.classList.add("active");
+                        }
+
+                        const card = document.createElement("div");
+                        card.classList.add("card");
+
+                        const cardBody = document.createElement("div");
+                        cardBody.classList.add("card-body");
+
+                        const title = document.createElement("h5");
+                        title.classList.add("card-title");
+                        title.innerText = festival.festivalTitle;
+
+                        const period = document.createElement("p");
+                        period.classList.add("card-text");
+                        period.innerText = festival.period;
+
+                        const image = document.createElement("img");
+                        image.classList.add("card-img-top");
+                        image.src = festival.thumbnail;
+                        image.alt = "Festival Poster";
+
+                        // 게시물로 이동하는 링크 추가
+                        const link = document.createElement("a");
+                        link.href = `/festival/festivalDetail?festivalNum=${festival.festivalNum}`;
+                        link.appendChild(card);
+
+                        cardBody.appendChild(title);
+                        cardBody.appendChild(period);
+                        card.appendChild(cardBody);
+                        card.appendChild(image);
+                        carouselItem.appendChild(link);
+                        carouselInner.appendChild(carouselItem);
+                    });
+                },
+                error: function (error) {
+                    console.error('데이터를 가져오는 중 에러 발생:', error);
+                }
+            });
+        });
+    </script>
+
+
+    <!-- 관리자 채팅시스템 -->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/653097a4f2439e1631e5f24b/1hd2t0nc9';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+
+
+
+
+
+    <!--
+    <script>
+        //로그인 체크 후 비로그인 시 login 으로 이동
+        //로그인 시 myPage 로 이동
+        // 앵커 태그를 클릭할 때 이벤트 리스너를 추가
+        document.querySelector('#login-link').addEventListener('click', function (event) {
+            // 현재 페이지 URL의 해시 (예: #scrollspyHeading5)를 가져옴
+            var currentHash = window.location.hash;
+
+            // 클릭한 앵커 태그의 href 속성 값을 가져옴
+            var href = this.getAttribute('href');
+
+            // 현재 해시와 앵커 태그의 href 속성이 같으면 분기 동작 수행
+            if (currentHash === href) {
+                alert('마이페이지로 이동합니다.');
+                // 이동하고자 하는 페이지 URL로 리다이렉트
+                window.location.href = "/member/myPage";
+                event.preventDefault(); // 기본 동작 방지
+            }
+        });
+
+
+                  //게시판 햄버거
+    // 모든 클래스가 "dropdown-item"인 요소를 선택합니다.
+    var dropdownItems = document.querySelectorAll('.dropdown-item');
+
+        // 각 요소에 대해 이벤트 리스너를 추가합니다.
+        dropdownItems.forEach(function (item) {
+            item.addEventListener('click', function (event) {
+                // 현재 페이지 URL의 해시 (예: #scrollspyHeading1)를 가져옴
+                var currentHash = window.location.hash;
+                // 클릭한 앵커 태그의 href 속성 값을 가져옴
+                var href = this.getAttribute('href');
+
+
+                if (currentHash === href) {
+
+                    if (href === '#scrollspyHeading1') {
+
+                        alert('축제게시판으로 이동합니다.');
+                        window.location.href = "/test";
+                        event.preventDefault();
+
+                    } else if (href === '#scrollspyHeading2') {
+
+                        alert('리뷰게시판으로 이동합니다.');
+                        window.location.href = "/reviewList";
+                        event.preventDefault();
+
+                    } else if (href === '#scrollspyHeading3') {
+
+                        alert('자유게시판으로 이동합니다.');
+                        window.location.href = "/board/boardList";
+                        event.preventDefault();
+
+                    } else {
+
+                        alert('공지게시판으로 이동합니다.');
+                        window.location.href = "/notice1";
+                        event.preventDefault();
+                    }
+
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+     <script>
+        //로그인 체크 후 비로그인 시 login 으로 이동
+        //로그인 시 myPage 로 이동
+        // 앵커 태그를 클릭할 때 이벤트 리스너를 추가
+        document.querySelector('#login-link').addEventListener('click', function (event) {
+            // 현재 페이지 URL의 해시 (예: #scrollspyHeading5)를 가져옴
+            var currentHash = window.location.hash;
+
+            // 클릭한 앵커 태그의 href 속성 값을 가져옴
+            var href = this.getAttribute('href');
+
+            // 현재 해시와 앵커 태그의 href 속성이 같으면 분기 동작 수행
+            if (currentHash === href) {
+                alert('마이페이지로 이동합니다.');
+                // 이동하고자 하는 페이지 URL로 리다이렉트
+                window.location.href = "/member/myPage";
+                event.preventDefault(); // 기본 동작 방지
+            }
+        });
+    </script> -->
+
+</body>
+
+</html>

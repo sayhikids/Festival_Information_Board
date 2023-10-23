@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+
+    <style>
+        /* 중요: 화면이 짤리지 않도록 스타일을 조정합니다. */
+        .carousel-item {
+            text-align: left;
+            /* 이미지 위 여백 추가 */
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            width: 100%;
+            /* 카드가 100% 폭을 차지하도록 설정 */
+        }
+
+        .card-img-top {
+            max-width: 100%;
+            /* 이미지가 카드 내에 맞게 크기 조절 */
+            height: 300px;
+            margin: auto;
+        }
+
+        /* 중간 검색 폼 관련 스타일 수정 */
+        .search-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-form input[type="search"] {
+            max-width: 80%;
+        }
+    </style>
+</head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>축제 게시판</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+
+    <style>
+        /* 푸터 스타일 추가 (내용이 화면을 가득 채우지 못한 경우) */
+        footer {
+            position: fixed;
+        }
+
+        /* 검색 입력 상자 스타일 */
+        .search-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .search-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        /* 검색 입력 상자 크기 조절 */
+        #search-input {
+            width: 600px;
+            /* 원하는 폭으로 조절 (예: 300px) */
+            padding: 10px;
+            /* 내부 여백 추가 */
+            font-size: 16px;
+            /* 글꼴 크기 조절 */
+            margin-bottom: 40px;
+
+        }
+
+        /* Pagination 스타일 */
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* 링크 기본 스타일 제거 */
+        a {
+            text-decoration: none;
+            /* 밑줄 제거 */
+            color: inherit;
+            /* 기본 텍스트 색상 상속 */
+        }
+
+        /* 모든 열 내의 .card 클래스에 스타일 적용 */
+        .col .card {
+            margin: auto;
+            width: 100%;
+            height: 350px;
+            /* 가로 너비 100%로 설정 */
+        }
+    </style>
+</head>
+
+<!-- 공통 헤더 -->
+<div th:replace="/fragments/header :: header"></div>
+
+<!-- 본문 내용 -->
+<div class="container text-center mt-5">
+    <h1> 개인 정보 </h1>
+    <form action="/member/myPage" method="post" th:object="${memberDTO}">
+        <table class="table table-bordered" style="width: 50%; margin: 0 auto; table-layout: fixed;">
+            <!-- PageResultDTO.dtoList 의 이름으로 호출한다.. -->
+            <tbody>
+                <tr>
+                    <!-- 수정 불가-->
+                    <th scope="row"> 아이디 </th>
+                    <td th:text="${member.email}"></td>
+                </tr>
+                <tr> <!-- 비밀번호 처리하기!!!!!! -->
+                    <th scope="row"> 비밀번호 </th>
+                    <td>
+                        <span th:if="${member.pw != null}">
+                            <!-- 비밀번호 길이에 따라 X 문자를 반복하여 표시
+
+                            별표(*)로 표시하지 않는 이유....
+                        Thymeleaf에서는 * 문자를 기본적으로 변수 또는 속성을 평가하는 데 사용.
+                        th:text="*"와 같은 코드는 Thymeleaf에서 잘못 해석된다. -->
+                            <!-- <span th:text="X" th:each="i : ${#numbers.sequence(1, member.pw.length())}"></span> -->
+                            <button type="button" id="modifyPassword" class="btn btn-primary">비밀번호 변경</button>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- 수정 불가-->
+                    <th scope="row"> 이름 </th>
+                    <td th:text="${member.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row"> 닉네임 </th>
+                    <td><input type="text" th:field="${member.nickname}"></td>
+                </tr>
+                <tr>
+                    <!-- 수정 불가-->
+                    <th scope="row"> 생년월일 </th>
+                    <td th:text="${member.birthDay}"></td>
+                </tr>
+                <tr>
+                    <!-- 수정 불가-->
+                    <th scope="row"> 성별 </th>
+                    <td th:text="${member.gender}"></td>
+                </tr>
+                <tr>
+                    <!-- 수정 불가-->
+                    <th scope="row"> 전화번호 </th>
+                    <td th:text="${member.phoneNum}"></td>
+                </tr>
+
+
+            </tbody>
+        </table>
+        <!-- 마이페이지 템플릿에서 중복 닉네임 메시지를 표시하는 부분 -->
+<div th:if="${duplicateNicknameMessage}" class="alert alert-danger">
+    <p th:text="${duplicateNicknameMessage}"></p>
+</div>
+
+        <div class="mt-3">
+                <button type="submit" id="modify" class="btn btn-primary">정보 수정</button>
+        </div>
+        <div class="mt-3">
+            <a th:href="@{/member/delete}" id="delete">
+                <button type="button" class="btn btn-primary">회원 탈퇴</button>
+            </a>
+        </div>
+    </form>
+</div>
+
+   <!-- 공통 푸터 -->
+   <div th:replace="/fragments/footer :: footer"></div>
+
+    <!-- jQuery 라이브러리를 먼저 로드합니다. -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 그 다음 Bootstrap 스크립트를 로드합니다. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
+
+    <!-- 헤더 스크립트 -->
+    <script th:replace="fragments/header :: script"></script>
+    
+    <script>
+        document.getElementById('modify').addEventListener('click', function(event){
+            alert('정보를 수정합니다.');
+        });
+        document.getElementById('delete').addEventListener('click', function(event){
+            alert('탈퇴가 완료되었습니다.');
+            window.location.href = "/member/delete";
+        });
+        document.getElementById('modifyPassword').addEventListener('click', function(event){
+            alert('비밀번호 변경 페이지로 이동합니다.');
+            window.location.href = "/member/modifyPassword";
+        });
+
+    </script>
+
+</body>
+
+</html>

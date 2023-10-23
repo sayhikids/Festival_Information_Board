@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="UTF-8">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!--부트스트랩-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+        <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+
+    <style>
+        body {
+            /* min-height: 100vh; */
+
+            background: -webkit-gradient(linear, left bottom, right top, from(#92b5db), to(#1d466c));
+            background: -webkit-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+            background: -moz-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+            background: -o-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+            background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+        }
+
+        .input-form {
+            max-width: 680px;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            padding: 32px;
+            background: #fff;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+        }
+    </style>
+
+</head>
+
+<body>
+    <div th:replace="/fragments/header :: header"></div>
+    <main>
+    <div class="container">
+        <div class="input-form-backgroud row">
+            <div class="input-form col-md-12 mx-auto">
+                <h4 class="mb-3">회원가입</h4>
+                <form class="validation-form" novalidate id="registration-form" action="/member/registerMember" method="post">
+                    <div class="mb-3">
+                        <label for="email">이메일 (로그인 ID)</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="" required>
+                        <div class="invalid-feedback">
+                            올바른 이메일 주소를 입력하세요.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name">이름</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="" value=""
+                                required>
+                            <div class="invalid-feedback">
+                                이름은 2글자 이상의 한글 또는 영문 대/소문자만 허용됩니다.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nickname">별명</label>
+                            <input type="text" class="form-control" id="nickname" name="nickname" placeholder=""
+                                value="" required>
+                            <div class="invalid-feedback">
+                                별명을 입력해주세요.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw">비밀번호</label>
+                        <input type="password" class="form-control" id="pw" name="pw" placeholder="" required>
+                        <div class="invalid-feedback">
+                            비밀번호를 입력해주세요.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw2">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="pw2" placeholder="" required>
+                        <div class="invalid-feedback">
+                            비밀번호가 일치하지 않습니다.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneNum">전화번호</label>
+                            <input type="tel" class="form-control" id="phoneNum" name="phoneNum"
+                                placeholder="-없이 입력해 주세요." required>
+                            <div class="invalid-feedback">
+                                휴대전화 번호는 숫자 10자 또는 11자로 입력하세요.
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gender">성별</label>
+                            <select class="custom-select d-block w-100" name="gender" id="gender">
+                                <option>남자</option>
+                                <option>여자</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                성별을 선택해 주세요.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDay">생년월일</label>
+                        <input type="date" class="form-control" id="birthDay" name="birthDay" placeholder="" required>
+                        <div class="invalid-feedback">
+                            생년월일을 선택해주세요.
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="aggrement" required>
+                        <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
+                    </div>
+                    <div class="mb-4"></div>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">가입 완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <div th:replace="/fragments/footer :: footer"></div>
+
+    <script th:replace="fragments/header :: script"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const forms = document.getElementsByClassName('validation-form');
+
+            Array.prototype.filter.call(forms, (form) => {
+                form.addEventListener('submit', function (event) {
+                    const passwordInput = form.querySelector('#pw');
+                    const confirmPasswordInput = form.querySelector('#pw2');
+                    const password = passwordInput.value;
+                    const confirmPassword = confirmPasswordInput.value;
+
+                    // 이름 필드의 정규식 검증
+                    const nameInput = form.querySelector('#name');
+                    const nameValue = nameInput.value;
+                    const namePattern = /^[가-힝a-zA-Z]{2,}$/;
+
+                    if (!namePattern.test(nameValue)) {
+                        nameInput.setCustomValidity('이름은 2글자 이상의 한글 또는 영문 대/소문자만 허용됩니다.');
+                        nameInput.classList.add('is-invalid');
+                    } else {
+                        nameInput.setCustomValidity('');
+                        nameInput.classList.remove('is-invalid');
+                    }
+
+                    // 이메일 필드의 정규식 검증
+                    const emailInput = form.querySelector('#email');
+                    const emailValue = emailInput.value;
+                    const emailPattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+
+                    if (!emailPattern.test(emailValue)) {
+                        emailInput.setCustomValidity('올바른 이메일 주소를 입력하세요.');
+                        emailInput.classList.add('is-invalid');
+                    } else {
+                        emailInput.setCustomValidity('');
+                        emailInput.classList.remove('is-invalid');
+                    }
+
+                    // 휴대전화 번호 입력란의 값을 가져옴
+                    const phoneNumberInput = form.querySelector('#phoneNum');
+                    let phoneNumberValue = phoneNumberInput.value;
+
+                    // 입력된 값에서 하이픈 제거
+                    phoneNumberValue = phoneNumberValue.replace(/-/g, '');
+
+                    // 정규식 패턴을 사용하여 유효성 검사
+                    const phoneNumberPattern = /^[0-9]{10,11}$/; // 10자 또는 11자의 숫자만 허용
+
+                    if (!phoneNumberPattern.test(phoneNumberValue)) {
+                        phoneNumberInput.setCustomValidity('휴대전화 번호는 숫자 10자 또는 11자로 입력하세요.');
+                        phoneNumberInput.classList.add('is-invalid');
+                    } else {
+                        phoneNumberInput.setCustomValidity('');
+                        phoneNumberInput.classList.remove('is-invalid');
+                    }
+
+                    // 하이픈 제거한 번호를 다시 입력란에 설정
+                    phoneNumberInput.value = phoneNumberValue;
+
+                    // 비밀번호와 비밀번호 확인이 같은지 확인합니다.
+                    if (password !== confirmPassword) {
+                        event.preventDefault();
+                        confirmPasswordInput.setCustomValidity('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                    } else {
+                        confirmPasswordInput.setCustomValidity(''); // 유효성 검사 오류를 제거합니다.
+                    }
+
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+
+
+    </script>
+
+    <script>
+        document.getElementById('registration-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // 폼의 기본 동작을 중지
+
+            const form = this;
+
+            // 폼의 각 필드에서 값을 가져와 객체를 만듭니다.
+            const data = {
+                email: form.querySelector('#email').value,
+                pw: form.querySelector('#pw').value,
+                phoneNum: form.querySelector('#phoneNum').value,
+                gender: form.querySelector('#gender').value,
+                birthDay: form.querySelector('#birthDay').value,
+                name: form.querySelector('#name').value,
+                nickname: form.querySelector('#nickname').value,
+            };
+
+            // 서버로 데이터 전송
+            // POST 요청을 보냅니다.
+            fetch('/member/registerMember', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // JSON 형식으로 데이터 전송
+                },
+                body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
+            })
+                .then(response => {
+                    // 서버 응답을 처리합니다.
+                    if (response.ok) {
+                        // 성공적인 응답 처리
+                        return response.json(); // JSON 형식의 응답을 파싱
+                    } else {
+                        // 오류 응답 처리
+                        return response.text().then(errorText => {
+                            // 서버에서 반환한 텍스트 오류 메시지를 사용하여 처리
+                            alert("회원가입 실패: " + errorText);
+                            throw new Error('회원가입 요청이 실패하였습니다.');
+                        });
+                    }
+                })
+                .then(data => {
+                    // 서버 응답 데이터를 처리합니다.
+                    if (data.success) {
+                        // 회원가입 성공 처리
+                        alert("회원가입 성공");
+                        window.location.href = '/member/login'; // 로그인 페이지로 리디렉션
+                    }
+                })
+                
+        });
+    </script>
+
+
+
+
+
+</body>
+
+</html>

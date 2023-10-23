@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Fullstival</title>
+
+    <!-- <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css}" rel="stylesheet"> -->
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
+    <link th:href="@{https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css}" rel="stylesheet">
+    <script th:src="@{https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js}"></script>
+    <!-- 공통 헤더 부트스트랩 링크 -->
+    <link th:replace="fragments/header :: link"/>
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+    
+    <style>
+        section  {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 30px;
+      }
+
+      #title::placeholder {
+        text-align: center;
+      }
+      .bnt {
+        padding: 10px;
+        width: 800px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 공통 헤더 -->
+    <div th:replace="/fragments/header :: header"></div>
+
+    <main>
+      <section>
+        <div>
+          <h1 style="text-align: center;">Q&A</h1>
+        </div>
+        <form action="/notice/questionmodify" method="post" th:object="${dto}">
+        <div class="form-group" th:width="500">
+          <input type="hidden" name="questionNum" th:value="${dto.questionNum}"/>
+          <input type="text" class="form-control" id="title" name="title" th:style="'width: 800px;'" th:value="${dto.title}">
+          <textarea class="form-control" id="content" name="content" th:style="'width: 800px;'">[[${dto.content}]]</textarea>
+        </div>
+        <div class="bnt">
+        <button type="submit" class="btn btn-dark" id="submit">수정</button>
+        <a th:href="@{/notice/question}">
+          <button type="button" class="btn btn-dark" id="boardList">목록</button>
+        </a>
+        </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+
+    <!-- 헤더 스크립트 -->
+    <script th:replace="fragments/header :: script"></script>
+
+    <script th:inline="javascript">
+      
+      // dto 객체의 값을 가져와서 Summernote 에디터에 설정
+    var dto = /*[[${dto}]]*/ null;
+    if (dto != null) {
+        $('#title').val(dto.title);
+        $('#content').summernote({
+            // placeholder: '게시글을 작성해주세요. ' +
+            //     '불쾌감을 주거나 타인을 비방 또는 명예훼손하는 글은 무통보 삭제될 수 있습니다. ' +
+            //     '작성글에 대한 민형사상의 책임은 본인에게 있습니다.',
+            tabsize: 2,
+            height: 500,
+            maxHeight: 500,
+            minHeight: 500,
+            width: 800,
+            lang: 'ko-KR'
+        });
+        $('#content').val(dto.content);
+    }
+    </script>
+  </body>
+</html>

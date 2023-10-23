@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="UTF-8" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>축제 게시판</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+    <style>
+        /* 검색 입력 상자 스타일 */
+        .search-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .search-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        /* 검색 입력 상자 크기 조절 */
+        #search-input {
+            width: 600px;
+            /* 원하는 폭으로 조절 (예: 300px) */
+            padding: 10px;
+            /* 내부 여백 추가 */
+            font-size: 16px;
+            /* 글꼴 크기 조절 */
+            margin-bottom: 40px;
+
+        }
+
+        /* Pagination 스타일 */
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* 링크 기본 스타일 제거 */
+        a {
+            text-decoration: none;
+            /* 밑줄 제거 */
+            color: inherit;
+            /* 기본 텍스트 색상 상속 */
+        }
+
+        /* 모든 열 내의 .card 클래스에 스타일 적용 */
+        .col .card {
+            margin: auto;
+            width: 100%;
+            height: 350px;
+            /* 가로 너비 100%로 설정 */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 공통 헤더 -->
+    <div th:replace="/fragments/header :: header"></div>
+    <main>
+        <h1 style="text-align: center;">축제 게시판</h1>
+
+        <div class="search-box">
+            <form id="search-form" method="get" action="/festival/festivalList">
+                <input type="text" id="search-input" placeholder="축제검색" name="searchQuery" th:value="${searchQuery}">
+                <button type="submit" class="search-button">검색</button>
+            </form>
+        </div>
+
+        <div class="container" style="max-width: 1700px;">
+            <div class="album py-5 bg-body-tertiary">
+                <div class="carousel-inner">
+                    <div class="row row-cols-4 g-4">
+                        <!-- festivals 데이터를 순회하며 각 축제 정보를 표시합니다. -->
+                        <div th:each="festival, iterStat : ${festivals}">
+                            <!-- 각 축제 정보 표시 -->
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <a th:href="@{/festival/festivalDetail(festivalNum=${festival.festivalNum})}">
+                                            <img class="card-img-top" th:src="${festival.thumbnail}" width="100%"
+                                                height="225" alt="축제 포스터" />
+                                            <h5 class="card-title" th:text="${festival.festivalTitle}" alt="축제 제목">축제 제목
+                                            </h5>
+                                            <p class="card-text" th:text="${festival.period}" alt="축제 기간">축제 기간</p>
+                                            <!-- <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted"
+                                                    th:text="${festival.modifyDate}">업데이트 시간</small>
+                                            </div> -->
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- 페이지 번호 목록 표시 -->
+        <div class="pagination">
+            <!-- 이전 페이지 버튼 -->
+            <a th:if="${hasPrevPage}" th:href="@{'/festival/festivalList?page=' + ${prevPageNumber}}"
+                class="page-link prev">이전</a>
+            <!-- 페이지 번호 표시 -->
+            <ul class="pagination justify-content-center" id="pagination">
+                <li th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{'/festival/festivalList?page=' + ${pageNumber}}" th:text="${pageNumber}"
+                        th:class="${pageNumber == currentPage ? 'active' : ''}"></a>
+                </li>
+            </ul>
+            <!-- 다음 페이지 버튼 -->
+            <a th:if="${hasNextPage}" th:href="@{'/festival/festivalList?page=' + ${nextPageNumber}}"
+                class="page-link next">다음</a>
+        </div>
+    </main>
+
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+
+
+    <!--부트스트랩 스크립트-->
+    <!-- jQuery 라이브러리를 먼저 로드합니다. -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- 그 다음 Bootstrap 스크립트를 로드합니다. -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
+
+<!-- 헤더 스크립트 -->
+<script th:replace="fragments/header :: script"></script>
+
+</body>
+
+</html>

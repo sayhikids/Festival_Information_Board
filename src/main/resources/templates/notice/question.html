@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullstival</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+
+    <!-- 헤더 스타일 -->
+    <link th:replace="fragments/header :: style" rel="stylesheet" />
+    <!-- 푸터 스타일 -->
+    <link th:replace="fragments/footer :: style" rel="stylesheet" />
+    <style>
+        section {
+        flex-grow: 1;
+        }
+
+        /* 링크 스타일 수정 */
+        a {
+            color: inherit; /* 부모 요소의 텍스트 색상을 상속받음 */
+            text-decoration: none; /* 링크의 밑줄을 제거함 */
+        }
+
+        .input-group .form-control {
+            max-width: 150px; /* 최대 너비 설정 */
+            height: 40px; /* 높이 설정 */
+        }
+
+        /* 작성자와 작성일 열의 스타일 수정 */
+        .table th:nth-child(3),
+        .table td:nth-child(3),
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            text-align: right;
+        }
+
+        /* 작성일 열의 왼쪽 마진 조절 */
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            margin-left: 10px; /* 원하는 만큼 조절하세요 */
+        }
+
+        /* Pagination 색상 수정 */
+        .pagination .page-link {
+            color: black;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: black;
+            border-color: black;
+        }
+
+        .pagination .page-link:focus {
+            box-shadow: none;
+        }
+        /* 중요: 화면이 짤리지 않도록 스타일을 조정합니다. */
+        .carousel-item {
+            text-align: left;
+            /* 이미지 위 여백 추가 */
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            width: 100%;
+            /* 카드가 100% 폭을 차지하도록 설정 */
+        }
+
+        .card-img-top {
+            max-width: 100%;
+            /* 이미지가 카드 내에 맞게 크기 조절 */
+            height: 300px;
+            margin: auto;
+        }
+
+        /* 중간 검색 폼 관련 스타일 수정 */
+        .search-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-form input[type="search"] {
+            max-width: 80%;
+        }
+
+        .search-button {
+            background-color: black;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        /* 검색 입력 상자 크기 조절 */
+        #search-input {
+            width: 600px;
+            /* 원하는 폭으로 조절 (예: 300px) */
+            padding: 10px;
+            /* 내부 여백 추가 */
+            font-size: 16px;
+            /* 글꼴 크기 조절 */
+            margin-bottom: 40px;
+
+        }
+
+        /* Pagination 스타일 */
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            color: #333;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* 링크 기본 스타일 제거 */
+        a {
+            text-decoration: none;
+            /* 밑줄 제거 */
+            color: inherit;
+            /* 기본 텍스트 색상 상속 */
+        }
+
+        /* 모든 열 내의 .card 클래스에 스타일 적용 */
+        .col .card {
+            margin: auto;
+            width: 100%;
+            height: 350px;
+            /* 가로 너비 100%로 설정 */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 공통 헤더 -->
+    <div th:replace="/fragments/header :: header"></div>
+
+    <main>
+        <section class="container my-5 text-center">
+            <div class="d-flex justify-content-end mb-3" style="margin-top: -25px;">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#writeModal">
+                    <a th:href="@{/notice/questionWrite}">글쓰기</a>
+                </button>
+            </div>
+            <div class="d-flex justify-content-end mb-3">
+            </div>
+            <h2>Q&A</h2>
+            <!-- <div style="display: flex; justify-content: flex-end;">
+                <a href="/notice/notice1" class="btn btn-secondary">NOTICE</a>
+            </div> -->
+            <br>
+            <br>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">번호</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="dto : ${result}">
+                        <th scope="row">
+                            <!-- 아래는 글번호에 페이지 넘버와 글번호를 추가로 설정하는것...List 를 모두 확인 후 추가 작업할것. -->
+                            <a th:href="@{/notice/questionDetail(questionNum=${dto.questionNum})}">[[${dto.questionNum}]]</a>
+                        </th>
+                        <td><a th:href="@{/notice/questionDetail(questionNum=${dto.questionNum})}">[[${dto.title}]]</a></td>
+                        <td><a th:href="@{/notice/questionDetail(questionNum=${dto.questionNum})}">[[${dto.nickname}]]</a></td>
+                        <td><a th:text="${#temporals.format(dto.registerDate, 'yyyy-MM-dd')}"></a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이지 번호 목록 표시 -->
+            <div class="pagination">
+                <!-- 이전 페이지 버튼 -->
+                <a th:if="${hasPrevPage}" th:href="@{'/notice/question?page=' + ${prevPageNumber}}"
+                    class="page-link prev">이전</a>
+                <!-- 페이지 번호 표시 -->
+                <ul class="pagination justify-content-center" id="pagination">
+                    <li th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{'/notice/question?page=' + ${pageNumber}}" th:text="${pageNumber}"
+                            th:class="${pageNumber == currentPage ? 'active' : ''}"></a>
+                    </li>
+                </ul>
+                <!-- 다음 페이지 버튼 -->
+                <a th:if="${hasNextPage}" th:href="@{'/notice/question?page=' + ${nextPageNumber}}"
+                    class="page-link next">다음</a>
+            </div>
+            <div class="d-flex justify-content-end mb-3" style="margin-top: -90px;">
+                <form action="/notice/question" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="searchQuery"
+                            th:value="${searchQuery}">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- 공통 푸터 -->
+    <div th:replace="/fragments/footer :: footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gg6vUz1rTL5UHVbNXLKwgpAYNr2NvTAPC5JiKc+2aX8Cxl+U7v2+nSvzvIMnJvWR" crossorigin="anonymous"></script>
+
+        <!-- 헤더 스크립트 -->
+        <script th:replace="fragments/header :: script"></script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+${AnsiColor.BLUE} _______     _ _                   ______           _                   
+(_______)   | | |                 (_____ \         (_)              _   
+${AnsiColor.CYAN} _____ _   _| | | ____ _____ _____ _____) )___ ___  _ _____  ____ _| |_ 
+|  ___) | | | | |/ _  | ___ (____ |  ____/ ___) _ \| | ___ |/ ___|_   _)
+| |   | |_| | | ( (_| | ____/ ___ | |   | |  | |_| | | ____( (___  | |_ 
+${AnsiColor.BRIGHT_CYAN}|_|   |____/ \_)_)___ |_____)_____|_|   |_|   \___/| |_____)\____)  \__)
+                (_____|                          (__/                   
+${AnsiColor.GREEN}:: Spring Boot ::
+${application.title} ${application.version}
+Powered by Spring Boot ${spring-boot.version}
